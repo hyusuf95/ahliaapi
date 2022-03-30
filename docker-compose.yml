@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  ahliaapi:
+    image: ahliaapi
+    container_name: AhliaAPI
+    ports:
+      - 5555:5555
+    restart: always
+    volumes:
+      - /home/ubuntu/ahlia/app:/code/app/:ro

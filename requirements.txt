@@ -1,0 +1,11 @@
+psycopg2-binary
+fastapi
+sqlalchemy
+passlib
+bcrypt
+python-jose
+python-secrets
+python-multipart
+pyJWT
+python-decouple
+uvicorn
