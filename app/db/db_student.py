@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
+
 from schemes import StudentDisplay
-from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted
+from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted, DbCourse
 from exceptionsHandler import handle_not_found
 from sqlalchemy.orm import Session
 from helper import grade_to_letter
@@ -20,11 +21,7 @@ def get_current_schedule(current_student: StudentDisplay, db: Session):
 
 
 def get_transcript(current_student: StudentDisplay, db:Session):
-
-
-
-
-        transcript = db.query(DbOffer.course_id, DbSemester.semester_name, DbGrades.grade, DbRegestration.student_id).select_from(DbOffer).filter(DbOffer.semester_id == DbSemester.semester_id).filter(DbOffer.offer_id == DbRegestration.offer_id).filter(DbRegestration.id == DbGrades.registration_id).filter(DbRegestration.student_id == current_student.student_id).filter(DbSemester.isactive != True).filter(DbSemester.registration_open != True).all()
+        transcript = db.query(DbOffer.course_id, DbCourse.credit, DbSemester.semester_name, DbGrades.grade, DbRegestration.student_id).select_from(DbOffer).filter(DbOffer.semester_id == DbSemester.semester_id).filter(DbOffer.offer_id == DbRegestration.offer_id).filter(DbRegestration.id == DbGrades.registration_id).filter(DbRegestration.student_id == current_student.student_id).filter(DbSemester.isactive != True).filter(DbSemester.registration_open != True).filter(DbCourse.course_id == DbOffer.course_id).all()
 
         MainList = []
         semesterNames = []
@@ -42,7 +39,8 @@ def get_transcript(current_student: StudentDisplay, db:Session):
                     CoursesList.append(
                         {
                             "Course": t["course_id"],
-                            "Grade": grade_to_letter(t["grade"])
+                            "Grade": grade_to_letter(t["grade"]),
+                            "Credit": t["credit"]
                         }
                     )
             object = {"SemesterName": s, "Courses": CoursesList}
