@@ -91,3 +91,8 @@ def get_course_time(CourseName: str, semesterID: int, db: Session):
             "end_time": t[2]
         })
     return timeObject
+
+
+
+def get_semester_gpa(semester):
+    pass
