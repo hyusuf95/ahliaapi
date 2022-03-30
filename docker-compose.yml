@@ -8,3 +8,4 @@ services:
     restart: always
     volumes:
       - /home/ubuntu/ahlia/app:/code/app/:ro
+      

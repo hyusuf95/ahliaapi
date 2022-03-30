@@ -29,7 +29,7 @@ app.add_middleware(
 
 @app.get('/')
 def index():
-    return {'message': 'Welcome to Ahlia API'}
+    return {'message': 'Welcome to Ahlia API - 2'}
 
 
 models.Base.metadata.create_all(engine)
