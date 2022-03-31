@@ -33,11 +33,17 @@ def get_transcript(current_student: StudentDisplay, db:Session):
         
         #calculate gpa
         
+        CumulativeCredits = 0
+        CumulativeWithoutPass = 0
         for s in semesterNames:
-            
+            SemesterCredits = 0
+            SemesterWithoutPass = 0
             CoursesList = []
             for t in transcript:
                 if (t["semester_name"] == s):
+                    SemesterCredits+=t["credit"]
+                    if not (t["grade"]>100): #If not p
+                        SemesterWithoutPass+=t["credit"]
                     CoursesList.append(
                         {
                             "Course": t["course_id"],
@@ -45,9 +51,11 @@ def get_transcript(current_student: StudentDisplay, db:Session):
                             "Credit": t["credit"]
                         }
                     )
+            CumulativeCredits+=SemesterCredits
+            CumulativeWithoutPass+=SemesterWithoutPass
+            CoursesList.append({"SemesterCredits": SemesterCredits, "CumulativeCredits": CumulativeCredits, "SemesterCreditsWithoutPass": SemesterWithoutPass,"CumulativeWithoutPass": CumulativeWithoutPass})
             object = {"SemesterName": s, "Courses": CoursesList}
             MainList.append(object)
-
 
 
 
