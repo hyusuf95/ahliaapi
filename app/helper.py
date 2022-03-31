@@ -94,5 +94,29 @@ def get_course_time(CourseName: str, semesterID: int, db: Session):
 
 
 
-def get_semester_gpa(semester):
-    pass
+def get_semester_gpa(MainList):
+        for semester in MainList:
+
+            courses = semester["Courses"]
+
+            for course in courses:
+                print(course["Grade"]["Points"])
+                break
+                print (course["Points"])
+                print(course["Grade"])
+                print(course["Credit"])
+
+            break
+            #CumulativeCredits = semester["Credits"]["CumulativeWithoutPass"]
+            #courses = semester["Courses"]
+            #print(SemesterCredits)
+            # for course in courses:
+            #     print(course)
+            #     break
+            #     coursepoints = course["Points"]
+            #     courseCredits = course["Credit"]
+            #     print(coursepoints, courseCredits)
+
+            
+            
+        

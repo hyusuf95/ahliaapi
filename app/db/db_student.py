@@ -4,7 +4,7 @@ from schemes import StudentDisplay
 from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted, DbCourse
 from exceptionsHandler import handle_not_found
 from sqlalchemy.orm import Session
-from helper import grade_to_letter
+from helper import grade_to_letter, get_semester_gpa
 
 def get_student_by_id(id: int, db: Session):
     student = db.query(DbStudent).filter(
@@ -54,9 +54,10 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             CumulativeCredits+=SemesterCredits
             CumulativeWithoutPass+=SemesterWithoutPass
             CreditsObject = {"SemesterCredits": SemesterCredits, "CumulativeCredits": CumulativeCredits, "SemesterCreditsWithoutPass": SemesterWithoutPass,"CumulativeWithoutPass": CumulativeWithoutPass}
-            object = {"SemesterName": s, "Courses": CoursesList, "Credits": CreditsObject}
+            object = {"SemesterName": s, "Courses": CoursesList}
             
             MainList.append(object)
+            MainList.append({"Credits": CreditsObject})
 
 
 
@@ -66,13 +67,12 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             ExamtedList.append(e[0])
         
         MainList.append({"Examted Courses (Grade E)": ExamtedList })
-        
-        # for semester in MainList:
-        #     print (semester["Credits"]["SemesterCredits"])
-        #     break
-
+        get_semester_gpa(MainList)
 
         return MainList
+
+
+
 
         
 
