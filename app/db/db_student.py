@@ -20,10 +20,6 @@ def get_current_schedule(current_student: StudentDisplay, db: Session):
 
 
 def get_transcript(current_student: StudentDisplay, db:Session):
-
-
-
-
         transcript = db.query(DbOffer.course_id, DbSemester.semester_name, DbGrades.grade, DbRegestration.student_id).select_from(DbOffer).filter(DbOffer.semester_id == DbSemester.semester_id).filter(DbOffer.offer_id == DbRegestration.offer_id).filter(DbRegestration.id == DbGrades.registration_id).filter(DbRegestration.student_id == current_student.student_id).filter(DbSemester.isactive != True).filter(DbSemester.registration_open != True).all()
 
         MainList = []
@@ -33,6 +29,7 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             if (semesterName not in semesterNames):
                 semesterNames.append(semesterName)
         
+        #calculate gpa
         
         for s in semesterNames:
             
