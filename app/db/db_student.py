@@ -53,8 +53,9 @@ def get_transcript(current_student: StudentDisplay, db:Session):
                     )
             CumulativeCredits+=SemesterCredits
             CumulativeWithoutPass+=SemesterWithoutPass
-            CoursesList.append({"SemesterCredits": SemesterCredits, "CumulativeCredits": CumulativeCredits, "SemesterCreditsWithoutPass": SemesterWithoutPass,"CumulativeWithoutPass": CumulativeWithoutPass})
-            object = {"SemesterName": s, "Courses": CoursesList}
+            CreditsObject = {"SemesterCredits": SemesterCredits, "CumulativeCredits": CumulativeCredits, "SemesterCreditsWithoutPass": SemesterWithoutPass,"CumulativeWithoutPass": CumulativeWithoutPass}
+            object = {"SemesterName": s, "Courses": CoursesList, "Credits": CreditsObject}
+            
             MainList.append(object)
 
 
@@ -65,6 +66,10 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             ExamtedList.append(e[0])
         
         MainList.append({"Examted Courses (Grade E)": ExamtedList })
+        
+        # for semester in MainList:
+        #     print (semester["Credits"]["SemesterCredits"])
+        #     break
 
 
         return MainList
