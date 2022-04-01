@@ -4,7 +4,7 @@ from schemes import StudentDisplay
 from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted, DbCourse
 from exceptionsHandler import handle_not_found
 from sqlalchemy.orm import Session
-from helper import grade_to_letter, get_semester_gpa
+from helper import grade_to_letter
 
 def get_student_by_id(id: int, db: Session):
     student = db.query(DbStudent).filter(
