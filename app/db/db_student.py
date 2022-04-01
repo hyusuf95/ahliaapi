@@ -67,8 +67,6 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             ExamtedList.append(e[0])
         
         MainList.append({"Examted Courses (Grade E)": ExamtedList })
-        get_semester_gpa(MainList)
-
         return MainList
 
 
