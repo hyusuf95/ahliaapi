@@ -3,7 +3,7 @@ from fastapi import HTTPException as HE, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from schemes import StudentDisplay
-from db.models import DbRegestration, DbGrades, DbOffer, DbSemester, DbSInfo, DbCurriculum, DbCourse, DbStudent
+from db.models import DbRegestration, DbGrades, DbOffer, DbSemester, DbSInfo, DbCurriculum, DbCourse, DbExamted
 import db.db_semesters as db_semesters
 from helper import grade_to_letter, checkCollision, get_course_time
 
@@ -128,6 +128,13 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
     else:
         if(sum + CourseToBeRegCredit > 18):
             raise HE(status_code=status.HTTP_406_NOT_ACCEPTABLE, detail='Can not register more than 18 credits')
+
+
+    #Check if course is examted    
+    isTaken = db.query(DbExamted).filter(DbExamted.course_id == courseName).filter(DbExamted.student_id == current_student.student_id)
+
+    if (isTaken):
+        raise HE(status_code=status.HTTP_409_CONFLICT, detail=f"Course {courseName} can not be registered because it is examted")
 
 
     
