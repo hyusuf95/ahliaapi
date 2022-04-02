@@ -91,4 +91,20 @@ def get_course_time(CourseName: str, semesterID: int, db: Session):
             "end_time": t[2]
         })
     return timeObject
-        
+
+
+
+
+def calculate_gpa(semester, SemesterWP):
+   
+    totalWeight = 0
+    gpa = 0
+    for course in semester:
+        if (course["Points"]):
+            weight = course["Points"] * course["CourseCredit"]
+            totalWeight+=weight
+    if (SemesterWP):
+        gpa = totalWeight/SemesterWP
+        return round(gpa,2)
+    else:
+        return "P"

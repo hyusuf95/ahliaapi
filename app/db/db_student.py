@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from app.helper import calculate_gpa
 
 from schemes import StudentDisplay
 from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted, DbCourse
@@ -52,19 +53,19 @@ def get_transcript(current_student: StudentDisplay, db:Session):
         Cumulative += Semester
         CumulativeWP += SemesterWP
 
+        semesterGPA = calculate_gpa(courseList, SemesterWP)
+
         MainList.append({
             "SemesterName": semesterName,
             "SemesterCreditsWithPass": Semester,
             "SemesterCreditsWithoutPass": SemesterWP,
             "CumulativeCreditsWithPass": Cumulative,
             "CumulativeCreditsWithoutPass": CumulativeWP,
-            "Courses": courseList
+            "Courses": courseList,
+            "SemesterGPA": semesterGPA
 
 
         })
-
-
-
 
     return MainList
 
