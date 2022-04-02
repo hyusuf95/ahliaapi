@@ -67,7 +67,7 @@ def get_transcript(current_student: StudentDisplay, db:Session):
 
         })
 
-    MainList.append(calculate_cumulative(MainList))
+    MainList.append({"CumulativeGPAs": calculate_cumulative(MainList)})
 
     
 
