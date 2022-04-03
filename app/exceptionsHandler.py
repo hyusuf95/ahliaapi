@@ -131,8 +131,8 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
 
     #Check if course is examted    
-    isTaken = db.query(DbExamted).filter(DbExamted.course_id == courseName).filter(DbExamted.student_id == current_student.student_id)
-
+    isTaken = db.query(DbExamted).filter(DbExamted.course_id == courseName).filter(DbExamted.student_id == current_student.student_id).all()
+    print(isTaken)
     if (isTaken):
         raise HE(status_code=status.HTTP_409_CONFLICT, detail=f"Course {courseName} can not be registered because it is examted")
 
