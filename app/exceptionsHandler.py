@@ -29,6 +29,7 @@ def handle_not_found(object):
 # Not Already registered
 # Maximum 18 Credits or 9 (summer)
 # No Clash
+#Take Prereq or examted
 
 
 
@@ -46,13 +47,13 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
     takenCourseProgram = db.query(DbOffer.course_id, DbCurriculum.program_id).select_from(DbOffer).filter(DbOffer.course_id == DbCurriculum.course_id).filter(DbOffer.offer_id == offer["offer_id"]).first()
 
-
+    #Handle course not in curriculum
     if (StudentProgram != takenCourseProgram[1]):
         raise HE(status_code=status.HTTP_403_FORBIDDEN, detail=f"Course {takenCourseProgram[1]} not in your Curriculum")
 
 
 
-
+    #Only next semester offers
 
     if (offer["semester_id"] != next_semester.semester_id):
         raise HE(status_code=status.HTTP_400_BAD_REQUEST, detail="This offer not within next semester, Do not show this message in the APP")
@@ -74,15 +75,30 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
         })
 
 
-
-
+#The query
+# select pre_req.pre_req_id from registration
+# join offered_course on registration.offer_id = offered_course.offer_id
+# join pre_req on offered_course.course_id = pre_req.course_id
+# where registration.student_id = 201910063 and offered_course.course_id = 'ITMS 205'
 
 
     #Validate prereq
     preReqCourses = db.query(DbPreReq.pre_req_id).filter(DbPreReq.course_id == courseName).all()
-    for prereq in preReqCourses:
-        prereq = prereq[0]
-        print(prereq)
+    if (preReqCourses[0][0]):
+        query = f"select pre_req.pre_req_id from registration join offered_course on registration.offer_id = offered_course.offer_id join pre_req on offered_course.course_id = pre_req.course_id where registration.student_id = {current_student.student_id} and offered_course.course_id = '{courseName}';"
+
+        queryExamted = f"select pre_req.course_id from examted join pre_req on pre_req.course_id = examted.course_id where examted.student_id = {current_student.student_id} and examted.course_id = '{preReqCourses[0][0]}';"
+        print(queryExamted)
+        TakenPreReq = db.execute(query).all()
+        PreReqExamted = db.execute(queryExamted).first()
+        for prereq in preReqCourses:
+            prereq = prereq[0]
+            #If prereq not found in takencourses
+            if not (prereq in TakenPreReq):
+                print(PreReqExamted)
+                #Check examted Courses
+                if not (PreReqExamted and prereq in PreReqExamted):
+                    raise HE(status_code=status.HTTP_428_PRECONDITION_REQUIRED, detail=f'Course {courseName} can not be registered, {prereq} need to be taken as prerequisite.')
 
 
 
