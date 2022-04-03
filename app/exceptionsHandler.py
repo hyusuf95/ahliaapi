@@ -3,7 +3,7 @@ from fastapi import HTTPException as HE, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from schemes import StudentDisplay
-from db.models import DbRegestration, DbGrades, DbOffer, DbSemester, DbSInfo, DbCurriculum, DbCourse, DbExamted
+from db.models import DbRegestration, DbGrades, DbOffer, DbSemester, DbSInfo, DbCurriculum, DbCourse, DbExamted, DbPreReq
 import db.db_semesters as db_semesters
 from helper import grade_to_letter, checkCollision, get_course_time
 
@@ -74,6 +74,27 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
         })
 
 
+
+
+
+
+    #Validate prereq
+    preReqCourses = db.query(DbPreReq.pre_req_id).filter(DbPreReq.course_id == courseName).all()
+    for prereq in preReqCourses:
+        prereq = prereq[0]
+        print(prereq)
+
+
+
+
+
+
+
+
+
+
+
+
     for r in result:
         #If course has been taken before
         if (courseName == r["courseName"]):
@@ -85,10 +106,6 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
             if (takenGrade >= 70):
                 raise HE(status_code=status.HTTP_409_CONFLICT, detail= f"{r['courseName']} course has been taken on {r['semester']} and grade {letter['Grade']} was scored")
-
-
-
-
 
 
 
@@ -132,9 +149,5 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
     #Check if course is examted    
     isTaken = db.query(DbExamted).filter(DbExamted.course_id == courseName).filter(DbExamted.student_id == current_student.student_id).all()
-    print(isTaken)
     if (isTaken):
         raise HE(status_code=status.HTTP_409_CONFLICT, detail=f"Course {courseName} can not be registered because it is examted")
-
-
-    
