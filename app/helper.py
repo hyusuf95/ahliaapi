@@ -108,3 +108,35 @@ def calculate_gpa(semester, SemesterWP):
         return round(gpa,2)
     else:
         return "P"
+
+
+
+def calculate_cumulative(Transcript):
+    tempGPA = 0
+    gpaweight = 0
+    GPAs = []
+    for semester in Transcript:
+        semesterName= semester["SemesterName"]
+        cumulativeWP = semester["CumulativeCreditsWithoutPass"]
+        semesterWP = semester["SemesterCreditsWithoutPass"]
+        semesterGPA = semester["SemesterGPA"]
+
+        if (semesterWP):
+            gpaweight += semesterWP * semesterGPA
+            gpa = round(gpaweight/cumulativeWP, 2)
+            tempGPA = gpa
+        else:
+            gpa=tempGPA
+
+        
+        GPAs.append({
+                "SemesterName": semesterName,
+                "cumulativeGPA": gpa
+        })
+        
+
+    return GPAs
+        
+
+
+        

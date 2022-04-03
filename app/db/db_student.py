@@ -1,11 +1,9 @@
 from sqlalchemy.orm import Session
-from app.helper import calculate_gpa
-
 from schemes import StudentDisplay
 from db.models import DbStudent, DbSemester, DbRegestration, DbOffer, DbGrades,DbExamted, DbCourse
 from exceptionsHandler import handle_not_found
 from sqlalchemy.orm import Session
-from helper import grade_to_letter
+from helper import grade_to_letter, calculate_gpa, calculate_cumulative
 
 def get_student_by_id(id: int, db: Session):
     student = db.query(DbStudent).filter(
@@ -54,6 +52,7 @@ def get_transcript(current_student: StudentDisplay, db:Session):
         CumulativeWP += SemesterWP
 
         semesterGPA = calculate_gpa(courseList, SemesterWP)
+       
 
         MainList.append({
             "SemesterName": semesterName,
@@ -67,6 +66,10 @@ def get_transcript(current_student: StudentDisplay, db:Session):
 
 
         })
+
+    MainList.append({"CumulativeGPAs": calculate_cumulative(MainList)})
+
+    
 
     return MainList
 
