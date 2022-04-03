@@ -67,7 +67,13 @@ def get_transcript(current_student: StudentDisplay, db:Session):
 
         })
 
-    MainList.append({"CumulativeGPAs": calculate_cumulative(MainList)})
+    cumulativeGPAs = calculate_cumulative(MainList)
+    for semester in MainList:
+        for gpa in cumulativeGPAs:
+            if (semester["SemesterName"] == gpa["SemesterName"]):
+                semester["CumulativeGPA"] = gpa["cumulativeGPA"]
+                break
+
 
     
 
