@@ -61,8 +61,9 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             "SemesterCreditsWithoutPass": SemesterWP,
             "CumulativeCreditsWithPass": Cumulative,
             "CumulativeCreditsWithoutPass": CumulativeWP,
-            "Courses": courseList,
-            "SemesterGPA": semesterGPA
+            "SemesterGPA": semesterGPA,
+            "Courses": courseList
+            
 
 
         })
