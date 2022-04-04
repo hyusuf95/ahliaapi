@@ -84,21 +84,39 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
     #Validate prereq
     preReqCourses = db.query(DbPreReq.pre_req_id).filter(DbPreReq.course_id == courseName).all()
-    if (preReqCourses[0][0]):
-        query = f"select pre_req.pre_req_id from registration join offered_course on registration.offer_id = offered_course.offer_id join pre_req on offered_course.course_id = pre_req.course_id where registration.student_id = {current_student.student_id} and offered_course.course_id = '{courseName}';"
 
-        queryExamted = f"select pre_req.course_id from examted join pre_req on pre_req.course_id = examted.course_id where examted.student_id = {current_student.student_id} and examted.course_id = '{preReqCourses[0][0]}';"
-        print(queryExamted)
-        TakenPreReq = db.execute(query).all()
-        PreReqExamted = db.execute(queryExamted).first()
-        for prereq in preReqCourses:
-            prereq = prereq[0]
-            #If prereq not found in takencourses
-            if not (prereq in TakenPreReq):
-                print(PreReqExamted)
-                #Check examted Courses
-                if not (PreReqExamted and prereq in PreReqExamted):
-                    raise HE(status_code=status.HTTP_428_PRECONDITION_REQUIRED, detail=f'Course {courseName} can not be registered, {prereq} need to be taken as prerequisite.')
+
+    for prereq in preReqCourses:
+        print(prereq[0])
+        if (prereq[0]): #If there is a requirement check grade
+            query = f"select grades.grade from grades join registration r on grades.registration_id = r.id join offered_course oc on r.offer_id = oc.offer_id where oc.course_id = '{prereq[0]}' and r.student_id = {current_student.student_id};"
+
+            PreReqGrade = db.execute(query).first()
+
+
+            if (PreReqGrade):
+                if (PreReqGrade[0] < 60):
+                        raise HE(status_code=status.HTTP_428_PRECONDITION_REQUIRED, detail=f"You have to pass {preReqCourses[0][0]} course in order to register {courseName} Course")
+            elif (not PreReqGrade):
+                raise HE(status_code=status.HTTP_428_PRECONDITION_REQUIRED, detail=f"Course {courseName} can not be registered, {preReqCourses[0][0]} need to be taken as prerequisite.")
+            
+        
+        
+        
+        
+        # print(queryExamted)
+        # PreReqGrade = db.execute(query).first()
+        # PreReqExamted = db.execute(queryExamted).first()
+        # for prereq in preReqCourses:
+        #     prereq = prereq[0]
+        #     #If prereq not found in takencourses
+        #     if (PreReqGrade < 60):
+        #         print(query)
+        #         print("************************************************")
+        #         print(PreReqExamted)
+        #         #Check examted Courses
+        #         if not (PreReqExamted and prereq in PreReqExamted):
+        #             raise HE(status_code=status.HTTP_428_PRECONDITION_REQUIRED, detail=f'Course {courseName} can not be registered, {prereq} need to be taken as prerequisite.')
 
 
 
