@@ -108,10 +108,19 @@ class Offer(BaseModel):
         orm_mode = True
 
 
+class Time(BaseModel):
+    day: str
+    start_time: str
+    end_time: str
+    class Config():
+        orm_mode = True
+
+
 class OfferInReg(BaseModel):
     offer_id: int
     course: CourseInOffer
     room: Room
+    time: List[Time]
     class Config():
         orm_mode=True
 
@@ -120,6 +129,7 @@ class OfferInSemester(BaseModel):
     offer_id: int
     course: CourseInOffer
     section_no: int
+    time: List[Time]
     class Config():
         orm_mode = True
 
