@@ -52,8 +52,8 @@ def get_transcript(current_student: StudentDisplay, db:Session):
         CumulativeWP += SemesterWP
 
         semesterGPA = calculate_gpa(courseList, SemesterWP)
-       
-
+        if (semesterGPA != "P"):
+           StrSemesterGPA = str(semesterGPA)
         MainList.append({
             "SemesterName": semesterName,
             "SemesterCreditsWithPass": Semester,
@@ -61,6 +61,7 @@ def get_transcript(current_student: StudentDisplay, db:Session):
             "CumulativeCreditsWithPass": Cumulative,
             "CumulativeCreditsWithoutPass": CumulativeWP,
             "SemesterGPA": semesterGPA,
+            "StrSemesterGPA": StrSemesterGPA,
             "Courses": courseList
             
 
