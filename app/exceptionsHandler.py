@@ -49,7 +49,7 @@ def handle_adding_course(offer, current_student: StudentDisplay, db: Session):
 
     #Handle course not in curriculum
     if (StudentProgram != takenCourseProgram[1]):
-        raise HE(status_code=status.HTTP_403_FORBIDDEN, detail=f"Course {takenCourseProgram[1]} not in your Curriculum")
+        raise HE(status_code=status.HTTP_403_FORBIDDEN, detail=f"Course {takenCourseProgram[0]} not in your Curriculum")
 
 
 
